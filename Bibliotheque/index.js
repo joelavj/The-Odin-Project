@@ -1,4 +1,4 @@
-
+'use strict';
 let myLibrary = [];
 const mainContainer = document.querySelector('main');
 const btnViewForm = document.getElementById("add-book");
@@ -7,10 +7,10 @@ const btnViewForm = document.getElementById("add-book");
 function formHTML() {
     return `
     <form>
-        <legend>New book</legend>
-        <input type="text" id="title" placeholder="title..." required>
-        <input type="text" id="author" placeholder="author..." required>
-        <input type="number" min="1" id="nbrPages" placeholder="number of pages...">
+        <h2>New book</h2>
+        <input type="text" name="title" placeholder="title..." required>
+        <input type="text" name="author" placeholder="author..." required>
+        <input type="number" min="1" name="numberOfPages" placeholder="number of pages..." required>
         <label>
             <input type="checkbox" name="status-read" value="true">
             Read
@@ -29,7 +29,7 @@ function libraryHTML() {
             <tr>
                 <th>Title</th>
                 <th>Author</th>
-                <th>Number of pages
+                <th>Number of pages</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -41,39 +41,40 @@ function libraryHTML() {
     `;
 }
 // HTML d'un livre 
-function bookHTML(book) {
-    title = document.createElement('td');
+function createBookRow(book) {
+    const title = document.createElement('td');
     title.textContent = book.title;
-    author = document.createElement('td');
+    const author = document.createElement('td');
     author.textContent = book.author;
-    nbrPages = document.createElement('td');
-    nbrPages.textContent = book.nbrPages;
-    statusRead = document.createElement('td');
-    statusRead.innerHTML = `<button onclick="changeStatusRead('${book.id}')">${book.statusRead ? 'Read' : 'Unread'}</button>`;
-    action = document.createElement('td');
-    action.innerHTML = `<button onclick="deleteBook('${book.id}')">Delete</button>`;
-    rowArray = document.createElement('tr');
+    const numberOfPages = document.createElement('td');
+    numberOfPages.textContent = book.numberOfPages;
+    const statusRead = document.createElement('td');
+    statusRead.innerHTML = `<button class="btn-status">${book.statusRead ? 'Read' : 'Unread'}</button>`;
+    const action = document.createElement('td');
+    action.innerHTML = `<button class="btn-delete">Delete</button>`;
+    const rowArray = document.createElement('tr');
+    rowArray.dataset.id = book.id;
     rowArray.appendChild(title);
     rowArray.appendChild(author);
-    rowArray.appendChild(nbrPages);
+    rowArray.appendChild(numberOfPages);
     rowArray.appendChild(statusRead);
     rowArray.appendChild(action);
     return rowArray;
 }
 // Objet livre
-function Book(title, author, nbrPages, statusRead) {
+function Book(title, author, numberOfPages, statusRead) {
     if (!new.target) {
         throw Error("You must use the 'new' operator to call the constructor");
     }
     this.id = crypto.randomUUID();
     this.title = title;
     this.author = author;
-    this.nbrPages = nbrPages;
+    this.numberOfPages = numberOfPages;
     this.statusRead = statusRead;
 }
 // fonction d'ajout d'un livre dans la bibliothèque
-function addBookToLibrary(title, author, nbrPages, statusRead) {
-    myLibrary.push(new Book(title, author, nbrPages, statusRead));
+function addBookToLibrary(title, author, numberOfPages, statusRead) {
+    myLibrary.push(new Book(title, author, numberOfPages, statusRead));
 }
 // fonction d'affichage des livres 
 function viewLibrary() {
@@ -84,50 +85,53 @@ function viewLibrary() {
         return;
     }
     mainContainer.innerHTML = libraryHTML();
+    const tbody = document.querySelector('tbody');
     myLibrary.forEach((book) => {
-        document.querySelector('tbody').appendChild(bookHTML(book));
+        tbody.appendChild(createBookRow(book));
     });
 }
+mainContainer.addEventListener('click', (e) => {
+    const id = e.target.closest('tr')?.dataset.id;
+    if (e.target.matches('.btn-delete')) deleteBook(id);
+    if (e.target.matches('.btn-status')) { findBook(id).toggleRead(); viewLibrary(); }
+
+})
 // Fonction qui supprime un livre
-function deleteBook(id_book) {
-    console.log(id_book);
-    myLibrary = myLibrary.filter((book) => book.id !== id_book);
+function deleteBook(idBook) {
+    myLibrary = myLibrary.filter((book) => book.id !== idBook);
     viewLibrary();
 }
 // Affiche le formulaire
 btnViewForm.addEventListener("click", () => {
     mainContainer.innerHTML = formHTML();
     document.getElementById("cancel").addEventListener("click", viewLibrary);
-    document.querySelector('form').addEventListener("submit", formValidate);
+    document.querySelector('form').addEventListener("submit", handleSubmit);
 });
 // fonction qui traite un formulaire
-function formValidate(e) {
+function handleSubmit(e) {
     e.preventDefault();
+    const form = new FormData(e.target);
     // Récuperer le titre
-    title = e.target.title.value;
+    const title = form.get('title');
     // Récuperer l'auteur
-    author = e.target.author.value;
+    const author = form.get('author');
     // Récuperer le nombre de pages
-    nbrPages = e.target.nbrPages.value;
+    const numberOfPages = Number(form.get('numberOfPages'));
     // Récuperer le statut de lecture
-    inputStatusRead = document.querySelector('input[name="status-read"]:checked');
-    statusRead = false;
-    if (inputStatusRead !== null && inputStatusRead.value === 'true') {
-        statusRead = true;
-    }
+    const statusRead = e.target.elements['status-read'].checked;
     // Après validation, ajout dans library
-    addBookToLibrary(title, author, nbrPages, statusRead);
+    addBookToLibrary(title, author, numberOfPages, statusRead);
     // Afficher la librairie
     viewLibrary();
 }
 
-function changeStatusRead(id_book) {
-    myLibrary.forEach((book) => {
-        if (book.id == id_book) {
-            book.statusRead = !book.statusRead;
-        }
-    });
-    viewLibrary();
+function findBook(idBook) {
+    return myLibrary.find(book => book.id === idBook);
 }
+
+// Change le statut de lecture d'un livre
+Book.prototype.toggleRead = function () {
+    this.statusRead = !this.statusRead;
+};
 
 viewLibrary();
