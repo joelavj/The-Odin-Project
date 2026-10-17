@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: cursive;
 }
 
 body {
@@ -9,6 +10,7 @@ body {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto minmax(calc(92vh - 50px), 1fr) 50px;
+    background-color: #cdd3d3;
 }
 
 header {
@@ -19,13 +21,12 @@ header {
     background-color: #d54444;
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 10px 10%;
     flex: 0 0 auto;
 }
 
 h1 {
     font-size: 2.5rem;
-    padding-left: 10%;
     color: whitesmoke;
     flex: 1 0 auto;
 }
@@ -33,7 +34,7 @@ h1 {
 #add-book {
     padding: 10px;
     font-size: 1rem;
-    margin-right: 10%;
+    /* margin-right: 10%; */
 }
 
 table {
@@ -50,10 +51,9 @@ caption {
 }
 
 th {
-    background-color: rgb(52, 175, 70);
+    background-color: #d54444;
     padding: 10px;
     color: whitesmoke;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 tr {
@@ -63,7 +63,6 @@ tr {
 
 td {
     padding: 10px;
-    font-family: cursive;
 }
 
 td button {
@@ -72,20 +71,24 @@ td button {
 }
 
 button:hover {
-    background-color: rgb(52, 175, 70);
+    background-color: #34af46;
     color: whitesmoke;
-    /* border: none; */
+}
+
+dialog {
+    width: 300px;
+    height: max-content;
+    place-self: center;
+    background-color: #cdd3d3;
+    border-radius: 10px;
+    border: none;
 }
 
 form {
-    width: 300px;
-    height: max-content;
     padding: 10px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background-color: cyan;
-    border-radius: 10px;
 }
 
 form input,
@@ -101,12 +104,12 @@ h2 {
 }
 
 #cancel {
-    background-color: red;
+    background-color: #d54444;
     color: white;
 }
 
 #cancel:hover {
-    background-color: rgba(255, 0, 0, 0.837);
+    background-color: red;
     color: white;
 }
 
@@ -123,12 +126,6 @@ footer {
     justify-content: center;
     background-color: #242222;
     color: whitesmoke;
-}
-
-main>p {
-    font-size: 2rem;
-    font-family: cursive;
-    text-align: center;
 }
 
 main {

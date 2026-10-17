@@ -13,9 +13,41 @@
 <body>
     <header>
         <h1>Library</h1>
-        <button id="add-book">New book</button>
+        <button id="add-book" command="show-modal" commandfor="my-form">New book</button>
     </header>
     <main>
+        <table>
+            <caption>List of books in the library</caption>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Number of pages</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <dialog id="my-form">
+            <form>
+                <h2>New book</h2>
+                <label for="title">Title</label>
+                <input type="text" name="title" id="author" required>
+                <label for="author">Author</label>
+                <input type="text" name="author" id="author" required>
+                <label for="number-of-pages">Number of pages</label>
+                <input type="number" min="1" name="numberOfPages" id="number-of-pages" required>
+                <label>
+                    <input type="checkbox" name="status-read" value="true">
+                    Read
+                </label>
+                <button type="submit">Add to library</button>
+                <button id="cancel" type="button" commandfor="my-form" command="close">Cancel</button>
+            </form>
+        </dialog>
     </main>
     <footer>
         <p>© 2026 - Coded by Joela</p>
